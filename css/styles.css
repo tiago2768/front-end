@@ -47,7 +47,7 @@ nav a.active{
 }
 
 main{
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.1rem;/*deixa as sections separadas*/
@@ -88,6 +88,11 @@ li{
     list-style: none;
 }
 
+.contato{
+    background-color: rgb(155, 242, 155);
+    width: 100%;
+}
+
 .contato h3{
     text-align: center;
 }
@@ -97,10 +102,14 @@ address{
 }
 
 .projetos{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1px;
+
 }
 /*DESCRIÇÃO SEGUNDA PAGINA*/
 .description{
+    display: inline-block; /*PERMITE QUE AS IMAGENS FIQUEM LADO A LADO*/
     background-color: #667eea;
 }
 
@@ -113,7 +122,18 @@ address{
     text-align: center;
 }
 
+.transparencia h2{
+    background-color: #667eea;
+    width: 100%;
+}
+
+.transparencia h4{
+    background-color: #667eea;
+    width: 100%;
+}
+
 .pix-voluntario{
+    width: 200%;
     background-color: #667eea;
     gap: 2rem;
 }
@@ -125,7 +145,8 @@ address{
 }
 
 table{
-    width: 50%;
+    width: 100%;
+    height: 100%;
 }
 
 .primeiro{
@@ -173,5 +194,6 @@ button{
 }
 
 footer{
+    background-color: #b88e82;
     text-align: center;
 }

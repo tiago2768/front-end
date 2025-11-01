@@ -1,55 +1,133 @@
-document.addEventListener('DOMContentLoaded', () =>{
+document.addEventListener("DOMContentLoaded", () => {
 
-    const handleSubmit = (event) =>{
-        event.preventDefault();
-        const form = document.getElementById('volunteerform');
-        if(!form) return;
+    const form = document.querySelector("form");
 
-        if(form.dataset.submmiting === 'true') return;
-        form.dataset.submmiting = 'true'
+  
+  const cpf = document.getElementById("cpf");
+  const telefone = document.getElementById("telefone");
+  const cep = document.getElementById("cep");
 
-        const nome = form.nome.value.trim();
-        const email = form.email.value.trim();
-        if(!nome || !email){
-            alert('por favor');
-            form.dataset.submmiting = 'false';
-            return;
-        }
+  cpf.addEventListener("input", () => {
+    cpf.value = cpf.value
+      .replace(/\D/g, "")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  });
 
-        const formData ={
-            nome,
-            email,
-            cpf: form.cpf.value.trim(),
-            telefone: form.telefone.value.trim(),
-            nascimento: form.nascimento.value.trim(),
-            endereco: form.endereco.value.trim(),
-            numero: form.numero.value.trim(),
-            complemento: form.complento.value.trim(),
-            cep: form.cep.value.trim(),
-            cidade: form.cidade.value.trim(),
-            estado: form.estado.value.trim(),
-            disponibilidade: form.disponibilidade.value.trim()
-        };
+  telefone.addEventListener("input", () => {
+    telefone.value = telefone.value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d{4})$/, "$1-$2");
+  });
 
-        let voluntarios = JSON.parse(localStorage.getIten('voluntarios')  || []);
-        voluntarios.push(formData);
-        localStorage.setItem('voluntarios', JSON.strinify(voluntarios));
+  cep.addEventListener("input", () => {
+    cep.value = cep.value
+      .replace(/\D/g, "")
+      .replace(/(\d{5})(\d{3})$/, "$1-$2");
+  });
 
-        exibirVoluntarios()
-    };
+  
+  function validarFormulario() {
+    const nome = form.nome.value.trim();
+    const email = form.email.value.trim();
+    const nascimento = form.nascimento.value.trim();
+    const endereco = form.endereco.value.trim();
+    const cidade = form.cidade.value.trim();
+    const estado = form.estado.value.trim();
+    
+    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+    const telefoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
+    const cepRegex = /^\d{5}-\d{3}$/;
+    const emailRegex = /^\S+@\S+\.\S+$/;
 
-    const form = document.getElementById('volunteerForm');
-    if(form) form.addEventListener('submit', handleSubmit);
-
-    const exibirVoluntarios = () =>{
-        const voluntarios = JSON.parse(localStorage.getItem('voluntarios') || []);
-
-        const tabelaContainer = document.getElementById('tabelaVoluntarios');
-        if(!tabelaContainer) return;
-
-        if(voluntarios.length ===0){
-            tabelaContainer.innerHTML = '<p>Ninguem Cadastrado</p>'
-        }
+    if(nome.length < 3){
+      alert("Digite um nome válido!");
+      form.nome.focus();
+      return false;
+    }
+    if(!emailRegex.test(email)){
+      alert("Digite um e-mail válido!");
+      form.email.focus();
+      return false;
+    }
+    if(!cpfRegex.test(cpf.value)){
+      alert("Digite um CPF válido! 12 Digitos.");
+      cpf.focus();
+      return false;
+    }
+    if(!telefoneRegex.test(telefone.value)){
+      alert("Digite um telefone válido! DD + Número.");
+      telefone.focus();
+      return false;
+    }
+    if(!nascimento){
+      alert("Informe uma data de nascimento!");
+      form.nascimento.focus();
+      return false;
+    }
+    if(endereco.length < 5){
+      alert("Informe um endereço!");
+      form.endereco.focus();
+      return false;
+    }
+    if(!cepRegex.test(cep.value)){
+      alert("Digite um CEP válido! 8 Digitos.");
+      cep.focus();
+      return false;
+    }
+    if(cidade.length < 2){
+      alert("Informe uma cidade!");
+      form.cidade.focus();
+      return false;
+    }
+    if(estado.length < 2){
+      alert("Informe o estado!");
+      form.estado.focus();
+      return false;
     }
 
+    return true;
+  }
+
+  
+  function salvarVoluntario() {
+    const voluntario = {
+      nome: form.nome.value.trim(),
+      email: form.email.value.trim(),
+      cpf: cpf.value,
+      telefone: telefone.value,
+      nascimento: form.nascimento.value,
+      endereco: form.endereco.value.trim(),
+      cep: cep.value,
+      cidade: form.cidade.value.trim(),
+      estado: form.estado.value.trim(),
+      dataCadastro: new Date().toLocaleString()
+    };
+
+    
+    const voluntarios = JSON.parse(localStorage.getItem("voluntarios")) || [];
+    voluntarios.push(voluntario);
+    localStorage.setItem("voluntarios", JSON.stringify(voluntarios));
+
+    alert(`Voluntário "${voluntario.nome}" cadastrado com sucesso!`);
+    form.reset();
+  }
+
+  
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if(validarFormulario()){
+      salvarVoluntario();
+    }
+  });
+
+  
+  const listarVoluntarios = () => {
+    const voluntarios = JSON.parse(localStorage.getItem("voluntarios")) || [];
+    console.log("Voluntários cadastrados:", voluntarios);
+  };
+
+  listarVoluntarios();
 });
