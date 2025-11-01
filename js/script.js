@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
       form.cidade.focus();
       return false;
     }
-    if(estado.length < 2){
-      alert("Informe o estado!");
+    if(estado.length < 3){
+      alert("Informe o nome completo do estado!");
       form.estado.focus();
       return false;
     }
